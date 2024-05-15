@@ -1,6 +1,9 @@
 import CustomButton from "../atoms/CustomButton";
 import { Magicpen } from "iconsax-react";
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+console.log("🚀 ~ backendUrl:", backendUrl)
+
 const ImageGenerateBox = () => {
   return (
     <div className="flex flex-col gap-5 w-full h-[132px] p-2 border border-[#262626] rounded-md bg-[#1A1A1A]">
