@@ -43,6 +43,7 @@ export const translateText = async (
 };
 
 export const generateTextFromImage = async (prompt: string) => {
+  console.log("🚀 ~ generateTextFromImage ~ prompt:", prompt)
   const url = `${backend_url}/image/generate`;
 
   const payload = {

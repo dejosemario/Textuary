@@ -3,12 +3,24 @@ import CustomButton from "../atoms/CustomButton";
 import { Magicpen } from "iconsax-react";
 import { generateTextFromImage, translateText } from "../../api/apiService";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
-console.log("🚀 ~ backendUrl:", backendUrl);
-
 const ImageGenerateBox = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [loadingState, setLoadingState] = useState<LoadingState>({
+    translation: "not_loaded",
+    generation: "not_loaded",
+    error: false,
+  });
+
+  const updateLoadingState = (
+    component: keyof Omit<LoadingState, "error">,
+    status: "not_loaded" | "loading" | "loaded",
+    hasError: boolean = false
+  ) => {
+    setLoadingState((prevState) => ({
+      ...prevState,
+      [component]: status,
+      error: hasError ? true : prevState.error,
+    }));
+  };
 
   const [promptData, setPromptData] = useState<DataType>({
     language: "yo",
@@ -24,26 +36,33 @@ const ImageGenerateBox = () => {
 
   const handleGenerate = async (prompt: string) => {
     try {
+      updateLoadingState("generation", "loading", false);
       const result = await generateTextFromImage(prompt);
       console.log("🚀 ~ handleGenerate ~ result:", result);
+
+      updateLoadingState("translation", "loaded", false);
     } catch (error) {
+      updateLoadingState("translation", "loaded", true); // loaded or not_loaded?
       console.log("🚀 ~ handleGenerate ~ error:", error);
     }
   };
 
   const handleTranslate = async () => {
     try {
+      updateLoadingState("translation", "loading", false);
       const result = await translateText(
         promptData.prompt,
         "en",
         promptData.language
       );
       console.log("🚀 ~ handleTranslate ~ result:", result);
-      
+
       if (result?.translated_text) {
+        updateLoadingState("translation", "loaded", false);
         handleGenerate(result.translated_text);
       }
     } catch (error) {
+      updateLoadingState("translation", "loaded", true); // loaded or not_loaded?
       console.log("🚀 ~ handleTranslate ~ error:", error);
     }
   };
@@ -91,4 +110,10 @@ export default ImageGenerateBox;
 type DataType = {
   language: string;
   prompt: string;
+};
+
+type LoadingState = {
+  translation: "not_loaded" | "loading" | "loaded";
+  generation: "not_loaded" | "loading" | "loaded";
+  error: boolean;
 };
