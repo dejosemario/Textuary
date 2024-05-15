@@ -20,9 +20,9 @@ const generateImageService = async (
       headers: {
         "content-type": "application/json",
         "X-RapidAPI-Key": apiKey,
-        "X-RapidAPI-Host": "dalle-image-generator.p.rapidapi.com",
+        "X-RapidAPI-Host": 'ai-text-to-image-generator-api.p.rapidapi.com',
       },
-      data: { prompt },
+      data: { inputs: prompt },
     };
 
     const response = await axios.request(payload);
