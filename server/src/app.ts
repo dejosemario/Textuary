@@ -2,6 +2,7 @@ import express from "express";
 import { Express } from "express";
 import { errorHandler } from "./middlewares/error.ts";
 import postRoute from "./routes/post.route.ts";
+import authRoute from "./routes/auth.route.ts";
 
 const app: Express = express();
 
@@ -9,6 +10,7 @@ const app: Express = express();
 app.use(express.json());
 app.use(errorHandler);
 app.use("/api/v1/", postRoute);
+app.use("/api/v1/", authRoute);
 
 app.get("/", (req, res) => {
   res.send(`Welcome to the home page`);
