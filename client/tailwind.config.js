@@ -23,8 +23,8 @@ module.exports = {
           borderRadius: 500,
           background: "#007DFC",
           filter: "blur(400px)",
-          top: '-22px',
-          left: '-84px'
+          top: "-22px",
+          left: "-84px",
         },
       };
       addUtilities(newUtilities, ["responsive", "hover"]);
