@@ -5,7 +5,7 @@ import wrapper from '../utils/wrapper.ts';
 const postRoute = Router();
 
 // postRoute.post('/', wrapper(postController.translateText));
-postRoute.get('/generateImage', wrapper(postController.generateImage));
+postRoute.post('/image/generate', wrapper(postController.generateImage));
 
 
 export default postRoute;
