@@ -1,12 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
+import ErrorWithStatus from "./ErrorWithStatus";
 
-const errorHandler = (err: any, req: Request, res: Response, next: NextFunction): void => {
-    const status: number = err.status || 500;
-    const success: boolean = err.success || false;
-    const message: string = err.message || "Something went wrong";
-
-    const cleanedMessage: string = message.replace(/"/g, "");
-    res.status(status).json({ success, message: cleanedMessage });
+const errorHandler = (
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (err instanceof ErrorWithStatus) {
+    res.status(err.code).json({ success: err.success, message: err.message });
+  } else {
+    res.status(500).json({ success: err.success, message: err.message });
+  }
 };
 
 export { errorHandler };
