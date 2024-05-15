@@ -43,11 +43,51 @@ export const translateText = async (
 };
 
 export const generateTextFromImage = async (prompt: string) => {
-  console.log("🚀 ~ generateTextFromImage ~ prompt:", prompt)
+  console.log("🚀 ~ generateTextFromImage ~ prompt:", prompt);
   const url = `${backend_url}/image/generate`;
 
   const payload = {
     prompt,
+  };
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: backend_headers,
+    body: JSON.stringify(payload),
+  });
+
+  return res.json().catch((e) => {
+    console.log(e);
+    return {};
+  });
+};
+
+export const signup = async (email: string, password: string) => {
+  const url = `${backend_url}/auth/signup`;
+
+  const payload = {
+    email,
+    password,
+  };
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: backend_headers,
+    body: JSON.stringify(payload),
+  });
+
+  return res.json().catch((e) => {
+    console.log(e);
+    return {};
+  });
+};
+
+export const login = async (email: string, password: string) => {
+  const url = `${backend_url}/auth/login`;
+
+  const payload = {
+    email,
+    password,
   };
 
   const res = await fetch(url, {

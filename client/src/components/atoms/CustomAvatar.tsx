@@ -6,13 +6,15 @@ interface CustomAvatarProps {
   type?: string;
   avatarClasses?: string;
   wrapperClasses?: string;
+  onClick: () => void;
 }
 
-const CustomAvatar: FC<CustomAvatarProps> = ({ src, size = 32 }) => {
+const CustomAvatar: FC<CustomAvatarProps> = ({ src, size = 32, onClick }) => {
   return (
     <div
       className={`relative border border-transparent bg-gradient-to-r from-[#FBDA61] to-[#FF5ACD] rounded-full`}
       style={{ width: size, height: size }}
+      onClick={onClick}
     >
       <div className="w-full h-full bg-[#090600] rounded-full flex items-center justify-center overflow-hidden">
         {src && (
