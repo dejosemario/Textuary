@@ -23,7 +23,7 @@ type TextToImageOptions = {
         })
         return response.data;
     }
-    catch (error){
+    catch (error: any){
         throw new Error(`Error generating image: ${error.message}`);
     }
 
