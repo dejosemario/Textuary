@@ -22,9 +22,7 @@ const Typography: React.FC<TypographyProps> = ({
 
   const componentStyle = styles[Component as keyof JSX.IntrinsicElements] || "";
 
-  {
-    /* Fix specificity of custom classNames */
-  }
+  /* Fix specificity of custom classNames */
   return (
     <Component
       className={`${className} ${componentStyle} ${baseStyles}`}
