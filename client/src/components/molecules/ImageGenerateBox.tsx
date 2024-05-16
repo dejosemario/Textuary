@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import CustomButton from "../atoms/CustomButton";
 import { Magicpen } from "iconsax-react";
 import { generateImageFromText, translateText } from "../../api/apiService";
+import { ChatData } from "../../types";
 
-const ImageGenerateBox = () => {
+const ImageGenerateBox: FC<ImageGenerateProps> = ({
+  chatData,
+  setChatData,
+}) => {
   const [loadingState, setLoadingState] = useState<LoadingState>({
     translation: "not_loaded",
     generation: "not_loaded",
@@ -50,6 +54,14 @@ const ImageGenerateBox = () => {
 
   const handleTranslate = async () => {
     try {
+      setChatData((prevData) => ({
+        ...prevData,
+        chatActive: true,
+        chatBotMessage: "",
+        currentConversationId: "",
+        messagesList: [],
+      }));
+
       updateLoadingState("translation", "loading", false);
       const result = await translateText(
         promptData.prompt,
@@ -109,6 +121,11 @@ const ImageGenerateBox = () => {
 };
 
 export default ImageGenerateBox;
+
+interface ImageGenerateProps {
+  chatData: ChatData;
+  setChatData: Dispatch<SetStateAction<ChatData>>;
+}
 
 type DataType = {
   language: string;

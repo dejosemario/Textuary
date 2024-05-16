@@ -4,10 +4,10 @@ import CustomButton from "../atoms/CustomButton/CustomButton";
 import { Add } from "iconsax-react";
 import Logo from "../atoms/Logo";
 import HistoryPane from "../molecules/HistoryPane";
-import { useState } from "react";
+import { FC, useState } from "react";
 import LogoutMenu from "../molecules/LogoutMenu";
 
-const Header = () => {
+const Header: FC<HeaderProps> = ({ handleNewChat }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // eslint-disable-next-line
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   return (
-    <header>
+    <header onClick={handleNewChat}>
       <div className="flex justify-between item-center max-w-[734px] lg:w-[734px] w-[100%] bg-[#1A1A1A] rounded-[49px] p-[20px]">
         <Logo />
         <CustomButton iconBefore={<Add size="18" color="#FEFEFE" />}>
@@ -47,3 +47,7 @@ const Header = () => {
 };
 
 export default Header;
+
+type HeaderProps = {
+  handleNewChat: () => void;
+};

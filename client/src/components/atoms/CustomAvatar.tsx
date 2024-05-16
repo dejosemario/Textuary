@@ -1,14 +1,4 @@
 import { FC } from "react";
-
-interface CustomAvatarProps {
-  src?: string;
-  size?: number;
-  type?: string;
-  avatarClasses?: string;
-  wrapperClasses?: string;
-  onClick: () => void;
-}
-
 const CustomAvatar: FC<CustomAvatarProps> = ({ src, size = 32, onClick }) => {
   return (
     <div
@@ -30,3 +20,12 @@ const CustomAvatar: FC<CustomAvatarProps> = ({ src, size = 32, onClick }) => {
 };
 
 export default CustomAvatar;
+
+interface CustomAvatarProps {
+  src?: string;
+  size?: number;
+  type?: string;
+  avatarClasses?: string;
+  wrapperClasses?: string;
+  onClick?: () => void;
+}
