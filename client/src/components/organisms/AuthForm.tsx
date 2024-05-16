@@ -3,9 +3,10 @@ import logo from "../../assets/logo-40x40.svg";
 import CustomInput from "../atoms/CustomInput";
 import { ChangeEvent, FC, useState } from "react";
 import CustomButton from "../atoms/CustomButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AuthForm: FC<AuthFormProps> = ({ type }) => {
+  let navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
@@ -17,6 +18,15 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
       ...prevValues,
       [name]: value,
     }));
+  };
+
+  const handleAuth = (type: "login" | "sign-up") => {
+    if (type === "login") {
+      navigate("/");
+    }
+    if (type === "sign-up") {
+      navigate("/");
+    }
   };
 
   return (
@@ -68,7 +78,7 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
                 onChange={handleChange}
               />
             </div>
-            <CustomButton>
+            <CustomButton onClick={() => handleAuth(type)}>
               {type === "sign-up" ? "Sign Up" : " Login "}
             </CustomButton>
 
