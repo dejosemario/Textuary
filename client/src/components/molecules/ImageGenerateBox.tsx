@@ -73,7 +73,7 @@ const ImageGenerateBox = () => {
         type="text"
         value={promptData.prompt}
         onChange={(e) => updatePromptData("prompt", e.target.value)}
-        className="w-full h-[62px] bg-transparent text-[#FEFEFE] leading-[1.25rem] font-[1rem]"
+        className="w-full h-[62px] bg-transparent text-[#FEFEFE] leading-[1.25rem] font-[1rem] outline-none"
       />
 
       <div className=" flex justify-between">
