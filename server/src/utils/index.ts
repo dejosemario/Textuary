@@ -37,7 +37,7 @@ const verifyToken = (token: string) => {
   try {
     return jwt.verify(token, secretKey);
   } catch (error) {
-    return new ErrorWithStatus("Invalid Token", 401);
+    throw new Error("Invalid or Expired Token");
   }
 };
 
