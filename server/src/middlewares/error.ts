@@ -8,9 +8,9 @@ const errorHandler = (
   next: NextFunction
 ) => {
   if (err instanceof ErrorWithStatus) {
-   return res.status(err.code).json({ success: err.success, message: err.message });
+    return res.status(err.code).json({ success: false, message: err.message });
   } else {
-   return res.status(500).json({ success: err.success, message: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 
