@@ -19,7 +19,7 @@ export interface LoginResponse {
 const createUser = async (data: UserData): Promise<object> => {
   const user = await User.findOne({ email: data.email });
   if (user) {
-    new ErrorWithStatus("User already exists", 400);
+    throw new ErrorWithStatus("User already exists", 400);
   }
   const hashedPassword = await hashPassword(data.password);
   const newUser = new User({ ...data, password: hashedPassword });
@@ -38,7 +38,7 @@ const login = async (
   const isMatch = await comparePassword(password, user.password as string);
 
   if (!isMatch) {
-    throw new Error("Invalid credentials");
+    throw new ErrorWithStatus("Invalid credentials", 401); 
   }
 
   //generate the access token
