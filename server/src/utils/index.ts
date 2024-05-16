@@ -33,8 +33,8 @@ const verifyToken = (token: string) => {
   try {
     return jwt.verify(token, secretKey);
   } catch (error) {
-    return new ErrorWithStatus("unauthorized", 401);
+    return new ErrorWithStatus("Invalid Token", 401);
   }
 };
 
-export { validate, hashPassword, comparePassword, generateToken };
+export { validate, hashPassword, comparePassword, generateToken, verifyToken };
