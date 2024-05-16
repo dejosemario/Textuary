@@ -6,7 +6,7 @@ const Logo = ({ url = "/" }) => {
 
   return (
     <img
-      className="pointer"
+      className="cursor-pointer"
       src={logoText}
       onClick={() => navigate(url)}
       alt="logo"
