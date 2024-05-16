@@ -1,8 +1,12 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import ErrorWithStatus from "../middlewares/ErrorWithStatus";
+import dotenv from "dotenv";
 
-const secretKey = "your_secret_key";
+// dotenv.config();
+
+// const secretKey = "your_secret_key";
+let secretKey = process.env.JWT_SECRET ?? "secret_key";
 
 // This function is used to validate the request body against a schema.
 const validate = (schema: any, data: any): any => {
