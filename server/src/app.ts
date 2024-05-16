@@ -1,10 +1,12 @@
 import express from "express";
 import { Express } from "express";
 import { errorHandler } from "./middlewares/error.ts";
-import postRoute from "./routes/post.route.ts";
+import generateImageRoute from "./routes/generateImage.route.ts";
 import authRoute from "./routes/auth.route.ts";
 import morgan from "morgan";
 import cors from "cors";
+import { generateImage } from "./controllers/generate.controller.ts";
+
 
 const app: Express = express();
 
@@ -17,7 +19,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan("dev"));
-app.use("/api/v1/", postRoute);
+app.use(errorHandler);
+app.use("/api/v1/", generateImageRoute);
 app.use("/api/v1/", authRoute);
 app.use(errorHandler);
 
