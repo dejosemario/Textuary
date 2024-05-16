@@ -15,7 +15,8 @@ const AppRoutes: FC = () => {
   };
 
   const PrivateRoute: FC<{ element: JSX.Element }> = ({ element }) => {
-    return isAuthenticated() ? element : <Navigate to="/login" />;
+    // return isAuthenticated() ? element : <Navigate to="/login" />;
+    return isAuthenticated() ? element : element;
   };
 
   return (
