@@ -7,12 +7,11 @@ import morgan from "morgan";
 import cors from "cors";
 import { generateImage } from "./controllers/generate.controller.ts";
 
-
 const app: Express = express();
 
 // Use the express.json() middleware to parse the request body
 const corsOptions = {
-  origin: "process.env.CLIENT_URL",
+  origin: process.env.CLIENT_URL,
   credentials: true,
   optionsSuccessStatus: 200,
 };

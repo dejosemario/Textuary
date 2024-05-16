@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CustomButton from "../atoms/CustomButton";
 import { Magicpen } from "iconsax-react";
-import { generateTextFromImage, translateText } from "../../api/apiService";
+import { generateImageFromText, translateText } from "../../api/apiService";
 
 const ImageGenerateBox = () => {
   const [loadingState, setLoadingState] = useState<LoadingState>({
@@ -37,13 +37,14 @@ const ImageGenerateBox = () => {
   const handleGenerate = async (prompt: string) => {
     try {
       updateLoadingState("generation", "loading", false);
-      const result = await generateTextFromImage(prompt);
+      const result = await generateImageFromText(prompt);
+
       console.log("🚀 ~ handleGenerate ~ result:", result);
 
       updateLoadingState("translation", "loaded", false);
     } catch (error) {
       updateLoadingState("translation", "loaded", true); // loaded or not_loaded?
-      console.log("🚀 ~ handleGenerate ~ error:", error);
+      console.log("error:", error);
     }
   };
 
@@ -55,12 +56,14 @@ const ImageGenerateBox = () => {
         "en",
         promptData.language
       );
-      console.log("🚀 ~ handleTranslate ~ result:", result);
+      // console.log("🚀 ~ handleTranslate ~ result:", result);
 
       if (result?.translated_text) {
         updateLoadingState("translation", "loaded", false);
         handleGenerate(result.translated_text);
       }
+
+      updateLoadingState("translation", "loaded", false);
     } catch (error) {
       updateLoadingState("translation", "loaded", true); // loaded or not_loaded?
       console.log("🚀 ~ handleTranslate ~ error:", error);
@@ -73,7 +76,7 @@ const ImageGenerateBox = () => {
         type="text"
         value={promptData.prompt}
         onChange={(e) => updatePromptData("prompt", e.target.value)}
-        className="w-full h-[62px] bg-transparent text-[#FEFEFE] leading-[1.25rem] font-[1rem]"
+        className="w-full h-[62px] bg-transparent text-[#FEFEFE] leading-[1.25rem] font-[1rem] outline-none"
       />
 
       <div className=" flex justify-between">
