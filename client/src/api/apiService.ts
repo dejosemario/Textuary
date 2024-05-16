@@ -22,48 +22,48 @@ export const translateText = async (
   to: string,
   from_lang = ""
 ) => {
-  // const url = "https://google-api31.p.rapidapi.com/gtranslate";
+  const url = "https://google-api31.p.rapidapi.com/gtranslate";
 
-  // const payload = {
-  //   text,
-  //   to,
-  //   from_lang,
-  // };
+  const payload = {
+    text,
+    to,
+    from_lang,
+  };
 
-  // const res = await fetch(url, {
-  //   method: "POST",
-  //   headers: getGTransHeaders(),
-  //   body: JSON.stringify(payload),
-  // });
+  const res = await fetch(url, {
+    method: "POST",
+    headers: getGTransHeaders(),
+    body: JSON.stringify(payload),
+  });
 
-  // return res.json().catch((e) => {
-  //   console.error(e);
-  //   return {};
-  // });
+  return res.json().catch((e) => {
+    console.error(e);
+    return {};
+  });
 
-  return { translated_text: text };
+  // return { translated_text: text };
 };
 
 export const generateImageFromText = async (prompt: string) => {
-  // const url = `${backend_url}/image/generate`;
+  const url = `${backend_url}/image/generate`;
 
-  // const payload = {
-  //   prompt,
-  // };
-
-  // const res = await fetch(url, {
-  //   method: "POST",
-  //   body: JSON.stringify(payload),
-  // });
-
-  // return res.json().catch((e) => {
-  //   console.error(e);
-  //   return {};
-  // });
-
-  return {
-    url: "https://storage.googleapis.com/face-10b17.appspot.com/1715854767151_realistic.jpg?GoogleAccessId=face-10b17%40appspot.gserviceaccount.com&Expires=1715858367&Signature=bIDn%2BxHGUKngrQ8sMxRVc2AFXHrWLttITGG0O2sUeM7rjHmFo3H6iiF6fFTTIg0fDyZmQsNPJUXZ%2FS5RidI1RzlnKWYNY44iaua0e%2FiPEyRbPITy%2BtcTpwIIsnwiIiNzdP9LH42ajBmcMjuq%2FQsO2ollP2%2BYez5GLIdHraGIiRpAbivmJscmJLpIshoLi0mY6MBDjQ%2F4rQUZERi69PeumnNUEXOI8tgv6rOz0Nch0zZAjfl8f9JJmSmwifGeFZ%2BOaez9xZwENl9xf3ojyWbDVUAy%2B0WTcEQe8O7H%2FtgEc8T6mHDzH6sfs0V4Im4USUWSY0gaVwVJpusJeLrlL02jOw%3D%3D",
+  const payload = {
+    prompt,
   };
+
+  const res = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+  return res.json().catch((e) => {
+    console.error(e);
+    return {};
+  });
+
+  // return {
+  //   url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_MG9Uu0FO2CSst2NVIXWJvoiJkZYFR7pf7CzOHYF3Dw&s",
+  // };
 };
 
 export const signup = async (email: string, password: string) => {

@@ -4,10 +4,10 @@ import CustomButton from "../atoms/CustomButton/CustomButton";
 import { Add } from "iconsax-react";
 import Logo from "../atoms/Logo";
 import HistoryPane from "../molecules/HistoryPane";
-import { useState } from "react";
+import { FC, useState } from "react";
 import LogoutMenu from "../molecules/LogoutMenu";
 
-const Header = () => {
+const Header: FC<HeaderProps> = ({ handleNewChat }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // eslint-disable-next-line
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
@@ -20,12 +20,14 @@ const Header = () => {
   };
 
   return (
-    <header>
-      <div className="flex justify-between item-center max-w-[734px] lg:w-[734px] w-[100%] bg-[#1A1A1A] rounded-[49px] p-[20px]">
+    <header onClick={handleNewChat}>
+      <div className="flex justify-between item-center sm:max-w-[734px] max-w-[100%] md:w-[734px] w-screen md:bg-[#1A1A1A] bg-transparent rounded-[49px] p-4 md:p-[20px]">
         <Logo />
+
         <CustomButton iconBefore={<Add size="18" color="#FEFEFE" />}>
           New Chat
         </CustomButton>
+
         <div className="flex justify-between items-center gap-3">
           <CustomAvatar size={40} onClick={handleToggleAvatarMenu} />
           <img
@@ -36,14 +38,20 @@ const Header = () => {
           />
         </div>
       </div>
+
       <div className="flex justify-end">
         {isMenuOpen && (
           <HistoryPane onToggleHistoryMenu={handleToggleHistoryMenu} />
         )}
       </div>
+
       <div className="flex justify-end">{isAvatarOpen && <LogoutMenu />}</div>
     </header>
   );
 };
 
 export default Header;
+
+type HeaderProps = {
+  handleNewChat: () => void;
+};

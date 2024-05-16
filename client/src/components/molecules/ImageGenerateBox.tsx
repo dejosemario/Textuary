@@ -1,27 +1,13 @@
-import { useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import CustomButton from "../atoms/CustomButton";
 import { Magicpen } from "iconsax-react";
 import { generateImageFromText, translateText } from "../../api/apiService";
+import { ChatData, ChatMessage } from "../../types";
 
-const ImageGenerateBox = () => {
-  const [loadingState, setLoadingState] = useState<LoadingState>({
-    translation: "not_loaded",
-    generation: "not_loaded",
-    error: false,
-  });
-
-  const updateLoadingState = (
-    component: keyof Omit<LoadingState, "error">,
-    status: "not_loaded" | "loading" | "loaded",
-    hasError: boolean = false
-  ) => {
-    setLoadingState((prevState) => ({
-      ...prevState,
-      [component]: status,
-      error: hasError ? true : prevState.error,
-    }));
-  };
-
+const ImageGenerateBox: FC<ImageGenerateProps> = ({
+  chatData,
+  setChatData,
+}) => {
   const [promptData, setPromptData] = useState<DataType>({
     language: "yo",
     prompt: "",
@@ -36,42 +22,87 @@ const ImageGenerateBox = () => {
 
   const handleGenerate = async (prompt: string) => {
     try {
-      updateLoadingState("generation", "loading", false);
+      setChatData((prevData) => ({
+        ...prevData,
+        loading: "generating",
+      }));
+
       const result = await generateImageFromText(prompt);
 
       console.log("🚀 ~ handleGenerate ~ result:", result);
 
-      updateLoadingState("translation", "loaded", false);
+      const currentDate = new Date();
+
+      const newAiMsg: ChatMessage = {
+        sender: "model",
+        content: "Here is the result of your description.",
+        timestamp: currentDate,
+        imageUrl: result.url,
+      };
+
+      setChatData((prevData) => ({
+        ...prevData,
+        loading: "generated",
+        chatActive: true,
+        chatBotMessage: "",
+        currentConversationId: "",
+        messagesList: [...prevData.messagesList, newAiMsg],
+      }));
     } catch (error) {
-      updateLoadingState("translation", "loaded", true); // loaded or not_loaded?
+      setChatData((prevData) => ({
+        ...prevData,
+        loading: "error",
+      }));
+
       console.log("error:", error);
     }
   };
 
   const handleTranslate = async () => {
     try {
-      updateLoadingState("translation", "loading", false);
+      const newUserMsg: ChatMessage = {
+        sender: "user",
+        content: promptData.prompt,
+        timestamp: new Date(),
+      };
+
+      setChatData((prevData) => ({
+        ...prevData,
+        chatActive: true,
+        chatBotMessage: "",
+        currentConversationId: "",
+        messagesList: [...prevData.messagesList, newUserMsg],
+      }));
+
+      setChatData((prevData) => ({
+        ...prevData,
+        loading: "translating",
+      }));
       const result = await translateText(
         promptData.prompt,
         "en",
         promptData.language
       );
-      // console.log("🚀 ~ handleTranslate ~ result:", result);
+      console.log("🚀 ~ handleTranslate ~ result:", result);
 
       if (result?.translated_text) {
-        updateLoadingState("translation", "loaded", false);
+        setChatData((prevData) => ({
+          ...prevData,
+          loading: "translated",
+        }));
         handleGenerate(result.translated_text);
       }
-
-      updateLoadingState("translation", "loaded", false);
     } catch (error) {
-      updateLoadingState("translation", "loaded", true); // loaded or not_loaded?
+      setChatData((prevData) => ({
+        ...prevData,
+        loading: "error",
+      }));
       console.log("🚀 ~ handleTranslate ~ error:", error);
     }
   };
 
   return (
-    <div className="flex flex-col gap-5 max-w-[906px] w-full h-[132px] p-2 border border-[#262626] rounded-[10px] bg-[#1A1A1A]">
+    <div className="flex flex-col gap-5 max-w-full sm:max-w-[906px] w-[90%] md:w-full h-[132px] p-2 border border-[#262626] rounded-[10px] bg-[#1A1A1A]">
       <input
         type="text"
         value={promptData.prompt}
@@ -109,6 +140,11 @@ const ImageGenerateBox = () => {
 };
 
 export default ImageGenerateBox;
+
+interface ImageGenerateProps {
+  chatData: ChatData;
+  setChatData: Dispatch<SetStateAction<ChatData>>;
+}
 
 type DataType = {
   language: string;

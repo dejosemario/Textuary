@@ -3,7 +3,7 @@ import { Magicpen, MessageText } from "iconsax-react";
 
 const HowCanIHelpSection = () => {
   return (
-    <div className="flex flex-col items-center text-center">
+    <div className="flex flex-col items-center text-center px-4 md:px-0">
       <Typography as="h1" className="mb-5">
         How can i help you today?
       </Typography>
@@ -18,7 +18,7 @@ const HowCanIHelpSection = () => {
       <div>
         <Typography
           as="p"
-          className="text-[#888] flex items-center gap-2 text-center mb-3"
+          className="text-[#888] flex items-start md:items-center gap-2 text-center mb-3"
         >
           <Magicpen color="#FEFEFE" size="18" />
           Generate all kinds of image and illustrations
@@ -26,7 +26,7 @@ const HowCanIHelpSection = () => {
 
         <Typography
           as="p"
-          className="text-[#888] flex items-center gap-2 text-center"
+          className="text-[#888] flex items-start md:items-center gap-2 text-center"
         >
           <MessageText color="#FEFEFE" size="18" />
           Generate images using your language preference
