@@ -5,7 +5,8 @@ import { isAuthenticated } from "../middlewares/auth.ts";
 
 const chatRoute = Router();
 
-chatRoute.post("/chat", isAuthenticated, wrapper(chatController.chat));
+// chatRoute.post("/chat", isAuthenticated, wrapper(chatController.chat));
+chatRoute.post("/chat", wrapper(chatController.chat));
 chatRoute.get(
   "/chat",
   isAuthenticated,
