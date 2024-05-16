@@ -13,7 +13,13 @@ export type ChatHistory = {
 };
 
 export type ChatData = {
-  loading: boolean;
+  loading:
+    | "idle"
+    | "translating"
+    | "translated"
+    | "generating"
+    | "generated"
+    | "error";
   chatActive: boolean;
   chatBotMessage: any;
   currentConversationId: "";
