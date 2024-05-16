@@ -21,11 +21,13 @@ const Header: FC<HeaderProps> = ({ handleNewChat }) => {
 
   return (
     <header onClick={handleNewChat}>
-      <div className="flex justify-between item-center max-w-[734px] lg:w-[734px] w-[100%] bg-[#1A1A1A] rounded-[49px] p-[20px]">
+      <div className="flex justify-between item-center sm:max-w-[734px] max-w-[100%] md:w-[734px] w-screen md:bg-[#1A1A1A] bg-transparent rounded-[49px] p-4 md:p-[20px]">
         <Logo />
+
         <CustomButton iconBefore={<Add size="18" color="#FEFEFE" />}>
           New Chat
         </CustomButton>
+
         <div className="flex justify-between items-center gap-3">
           <CustomAvatar size={40} onClick={handleToggleAvatarMenu} />
           <img
@@ -36,11 +38,13 @@ const Header: FC<HeaderProps> = ({ handleNewChat }) => {
           />
         </div>
       </div>
+
       <div className="flex justify-end">
         {isMenuOpen && (
           <HistoryPane onToggleHistoryMenu={handleToggleHistoryMenu} />
         )}
       </div>
+
       <div className="flex justify-end">{isAvatarOpen && <LogoutMenu />}</div>
     </header>
   );

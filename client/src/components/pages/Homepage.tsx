@@ -8,7 +8,7 @@ import { ChatData } from "../../types";
 
 export default function HomePage() {
   const [chatData, setChatData] = useState<ChatData>({
-    loading: false,
+    loading: "idle",
     chatActive: false,
     chatBotMessage: null,
     currentConversationId: "",
@@ -19,7 +19,7 @@ export default function HomePage() {
   const handleNewChat = () => {
     setChatData((prevData) => ({
       ...prevData,
-      loading: false,
+      loading: "idle",
       chatActive: false,
       chatBotMessage: "",
       currentConversationId: "",
@@ -34,10 +34,10 @@ export default function HomePage() {
         backgroundImage: `url(${bgImg})`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        backgroundSize: "536px",
+        backgroundSize: "37%",
       }}
     >
-      <div className="w-[906px] mx-auto pt-4 pb-7 flex flex-col justify-between items-center">
+      <div className="w-[906px] mx-auto py-4 flex flex-col justify-between items-center">
         <Header handleNewChat={handleNewChat} />
 
         {!chatData.chatActive && <HowCanIHelpSection />}
