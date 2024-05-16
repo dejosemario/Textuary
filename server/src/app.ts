@@ -1,15 +1,16 @@
 import express from "express";
 import { Express } from "express";
 import { errorHandler } from "./middlewares/error.ts";
-import postRoute from "./routes/post.route.ts";
+import generateImageRoute from "./routes/generateImage.route.ts";
 import authRoute from "./routes/auth.route.ts";
+import { generateImage } from "./controllers/generate.controller.ts";
 
 const app: Express = express();
 
 // Use the express.json() middleware to parse the request body
 app.use(express.json());
 app.use(errorHandler);
-app.use("/api/v1/", postRoute);
+app.use("/api/v1/", generateImageRoute);
 app.use("/api/v1/", authRoute);
 
 app.get("/", (req, res) => {
