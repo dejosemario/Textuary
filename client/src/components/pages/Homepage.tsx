@@ -37,11 +37,11 @@ export default function HomePage() {
         backgroundSize: "536px",
       }}
     >
-      <div className="w-[906px] mx-auto pt-12 pb-7 flex flex-col justify-between items-center">
+      <div className="w-[906px] mx-auto pt-4 pb-7 flex flex-col justify-between items-center">
         <Header handleNewChat={handleNewChat} />
 
         {!chatData.chatActive && <HowCanIHelpSection />}
-        {chatData.chatActive && <ChatLayout />}
+        {chatData.chatActive && <ChatLayout chatData={chatData} />}
 
         <ImageGenerateBox chatData={chatData} setChatData={setChatData} />
       </div>
