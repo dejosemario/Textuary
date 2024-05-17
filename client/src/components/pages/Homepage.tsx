@@ -4,20 +4,14 @@ import ImageGenerateBox from "../molecules/ImageGenerateBox";
 import HowCanIHelpSection from "../molecules/HowCanIHelpSection";
 import ChatLayout from "../organisms/ChatLayout";
 import { useAppContext } from "../../context/AppContext";
+import { useEffect } from "react";
 
 export default function HomePage() {
-  const { chatData, setChatData } = useAppContext();
+  const { chatData } = useAppContext();
 
-  const handleNewChat = () => {
-    setChatData((prevData) => ({
-      ...prevData,
-      loading: "idle",
-      chatActive: false,
-      chatBotMessage: "",
-      currentConversationId: "",
-      messagesList: [],
-    }));
-  };
+  useEffect(() => {
+    console.log("🚀 ~ HomePage ~ chatData:", chatData);
+  }, [chatData]);
 
   return (
     <div
@@ -30,11 +24,8 @@ export default function HomePage() {
       }}
     >
       <div className="max-w-[906px] w-full px-4 lg:px-0 py-6 md:py-8 h-screen flex flex-col justify-between items-center">
-        <Header handleNewChat={handleNewChat} />
-
-        {!chatData.chatActive && <HowCanIHelpSection />}
-        {chatData.chatActive && <ChatLayout chatData={chatData} />}
-
+        <Header />
+        {chatData.chatActive ? <ChatLayout /> : <HowCanIHelpSection />}
         <ImageGenerateBox />
       </div>
     </div>

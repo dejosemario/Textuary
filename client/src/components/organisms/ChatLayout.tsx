@@ -2,15 +2,16 @@ import { FC } from "react";
 import ChatBotMsg from "../molecules/ChatBotMsg";
 import UserChatMsg from "../molecules/UserChatMsg";
 import { ChatData } from "../../types";
+import { useAppContext } from "../../context/AppContext";
 
-const ChatLayout: FC<ChatLayoutProps> = ({ chatData }) => {
-  const { messagesList } = chatData;
+const ChatLayout: FC<ChatLayoutProps> = () => {
+  const { currentMessages, chatData } = useAppContext();
 
-  if (!messagesList) return null;
+  if (!currentMessages) return null;
 
   return (
     <div className="flex flex-col flex-1 gap-7 w-full mt-[50px] mb-4 overflow-y-auto">
-      {messagesList?.map((msg, i) => {
+      {currentMessages?.map((msg, i) => {
         if (msg.sender === "user") {
           return <UserChatMsg key={i} msg={msg.content} />;
         } else if (msg.sender === "model") {
@@ -31,6 +32,7 @@ const ChatLayout: FC<ChatLayoutProps> = ({ chatData }) => {
           )}
         </>
       )}
+
       {chatData.loading === "error" && (
         <ChatBotMsg error={true} msg="Error encountered" />
       )}
@@ -40,6 +42,4 @@ const ChatLayout: FC<ChatLayoutProps> = ({ chatData }) => {
 
 export default ChatLayout;
 
-type ChatLayoutProps = {
-  chatData: ChatData;
-};
+type ChatLayoutProps = {};

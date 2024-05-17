@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 
+type StateSetter<T> = Dispatch<SetStateAction<T>>;
 export type ChatMessage = {
   sender: "user" | "model";
   content: string;
@@ -38,9 +39,13 @@ export interface UserState {
 }
 
 export interface AppContextType {
-  userState: UserState;
-  login: (user: User) => void;
-  logout: () => void;
   chatData: ChatData;
-  setChatData: Dispatch<SetStateAction<ChatData>>;
+  currentMessages: ChatMessage[];
+  isMenuOpen: boolean;
+  isAvatarOpen: boolean;
+  setChatData: StateSetter<ChatData>;
+  handleHistoryClick: (history: ChatHistory) => void;
+  setCurrentMessages: StateSetter<ChatMessage[]>;
+  setIsMenuOpen: StateSetter<boolean>;
+  setIsAvatarOpen: StateSetter<boolean>;
 }
