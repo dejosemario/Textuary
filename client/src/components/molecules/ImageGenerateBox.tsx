@@ -142,7 +142,7 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
           </label>
 
           <div className="flex items-center gap-1 bg-[#262626] px-3 rounded-[5px]">
-            <Information color="#FEFEFE" />
+            <Information size={18} color="#FEFEFE" />
             <select
               id="dropdown"
               value={promptData.language}
