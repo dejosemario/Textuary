@@ -27,7 +27,7 @@ const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const [chatData, setChatData] = useState<ChatData>({
     loading: "idle",
-    chatActive: false,
+    chatActive: true,
     chatBotMessage: null,
     currentConversationId: "",
     messagesList: [],

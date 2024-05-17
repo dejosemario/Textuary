@@ -4,13 +4,17 @@ import CustomButton from "../atoms/CustomButton/CustomButton";
 import { Add } from "iconsax-react";
 import Logo from "../atoms/Logo";
 import HistoryPane from "../molecules/HistoryPane";
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import LogoutMenu from "../molecules/LogoutMenu";
+import useClickAway from "../../hooks/UseClickAway";
 
 const Header: FC<HeaderProps> = ({ handleNewChat }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // eslint-disable-next-line
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
+  const historyPaneRef = useRef<HTMLDivElement>(null);
+  const logoutMenuRef = useRef<HTMLDivElement>(null);
+
   const handleToggleHistoryMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -18,6 +22,14 @@ const Header: FC<HeaderProps> = ({ handleNewChat }) => {
   const handleToggleAvatarMenu = () => {
     setIsAvatarOpen((prevIsAvatarOpen) => !prevIsAvatarOpen);
   };
+
+  useClickAway(historyPaneRef, () => {
+    if (isMenuOpen) setIsMenuOpen(false);
+  });
+
+  useClickAway(logoutMenuRef, () => {
+    if (isAvatarOpen) setIsAvatarOpen(false);
+  });
 
   return (
     <header onClick={handleNewChat} className="w-full flex justify-center">
@@ -39,13 +51,15 @@ const Header: FC<HeaderProps> = ({ handleNewChat }) => {
         </div>
       </div>
 
-      <div className="flex justify-end">
+      <div ref={historyPaneRef} className="flex justify-end">
         {isMenuOpen && (
           <HistoryPane onToggleHistoryMenu={handleToggleHistoryMenu} />
         )}
       </div>
 
-      <div className="flex justify-end">{isAvatarOpen && <LogoutMenu />}</div>
+      <div ref={logoutMenuRef} className="flex justify-end">
+        {isAvatarOpen && <LogoutMenu />}
+      </div>
     </header>
   );
 };
