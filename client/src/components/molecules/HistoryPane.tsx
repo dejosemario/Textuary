@@ -5,7 +5,7 @@ const HistoryPane = ({
   onToggleHistoryMenu: () => void;
 }) => {
   return (
-    <div className="absolute top-[0] sm:top-[102px] w-[263px] sm:w-[223px] h-[100%] sm:h-[calc(100%-298px)] border-[#262626] border-[1px] border-solid bg-[#1A1A1A] rounded-[10px] px-[20px] py-[20px] text-[#fefefe]">
+    <div className="absolute top-[0] sm:top-[120px] w-[263px] sm:w-[223px] h-[100%] sm:h-[calc(100%-298px)] border-[#262626] border-[1px] border-solid bg-[#1A1A1A] rounded-[10px] px-[20px] py-[20px] text-[#fefefe]">
       <div className="flex items-center justify-between text-base mb-[20px]">
         <p className="font-normal text-base">Chat History</p>
         <img
