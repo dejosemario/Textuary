@@ -1,4 +1,3 @@
-import Typography from "../atoms/Typography";
 import { Magicpen, MessageText } from "iconsax-react";
 
 const HowCanIHelpSection = () => {

@@ -2,9 +2,7 @@ import Header from "../organisms/Header";
 import bgImg from "../../assets/logo-bg-536x536.png";
 import ImageGenerateBox from "../molecules/ImageGenerateBox";
 import HowCanIHelpSection from "../molecules/HowCanIHelpSection";
-import { useState } from "react";
 import ChatLayout from "../organisms/ChatLayout";
-import { ChatData } from "../../types";
 import { useAppContext } from "../../context/AppContext";
 
 export default function HomePage() {
