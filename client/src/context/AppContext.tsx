@@ -1,16 +1,5 @@
-import {
-  FC,
-  createContext,
-  useState,
-  ReactNode,
-  useEffect,
-  useContext,
-} from "react";
-import { AppContextType, ChatData, User, UserState } from "../types";
-
-const initialUserState: UserState = {
-  user: null,
-};
+import { FC, createContext, useState, ReactNode, useContext } from "react";
+import { AppContextType, ChatData, ChatHistory, ChatMessage } from "../types";
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -23,7 +12,8 @@ export function useAppContext() {
 }
 
 const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [userState, setUserState] = useState<UserState>(initialUserState);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAvatarOpen, setIsAvatarOpen] = useState(false);
 
   const [chatData, setChatData] = useState<ChatData>({
     loading: "idle",
@@ -34,30 +24,32 @@ const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
     chatHistory: {},
   });
 
-  const login = (user: User) => {
-    setUserState({ user });
-    localStorage.setItem("user", JSON.stringify(user));
+  const [currentMessages, setCurrentMessages] = useState<ChatMessage[]>(
+    chatData.messagesList
+  );
+
+  const handleHistoryClick = (history: ChatHistory) => {
+    setIsMenuOpen(false);
+
+    setCurrentMessages(history.messages);
+
+    setChatData((prevData) => ({
+      ...prevData,
+      loading: "idle",
+      chatActive: true,
+    }));
   };
-
-  const logout = () => {
-    setUserState({ user: null });
-    localStorage.removeItem("user");
-  };
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-
-    if (storedUser) {
-      setUserState({ user: JSON.parse(storedUser) });
-    }
-  }, []);
 
   const contextValue: AppContextType = {
-    userState,
-    login,
-    logout,
     chatData,
+    currentMessages,
+    isMenuOpen,
+    isAvatarOpen,
     setChatData,
+    setCurrentMessages,
+    handleHistoryClick,
+    setIsMenuOpen,
+    setIsAvatarOpen,
   };
 
   return (

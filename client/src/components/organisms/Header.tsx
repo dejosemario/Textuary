@@ -7,13 +7,32 @@ import HistoryPane from "../molecules/HistoryPane";
 import { FC, useRef, useState } from "react";
 import LogoutMenu from "../molecules/LogoutMenu";
 import useClickAway from "../../hooks/UseClickAway";
+import { useAppContext } from "../../context/AppContext";
 
-const Header: FC<HeaderProps> = ({ handleNewChat }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // eslint-disable-next-line
-  const [isAvatarOpen, setIsAvatarOpen] = useState(false);
+const Header: FC<HeaderProps> = () => {
   const historyPaneRef = useRef<HTMLDivElement>(null);
   const logoutMenuRef = useRef<HTMLDivElement>(null);
+  const { setCurrentMessages } = useAppContext();
+
+  const {
+    isMenuOpen,
+    isAvatarOpen,
+    setChatData,
+    setIsMenuOpen,
+    setIsAvatarOpen,
+  } = useAppContext();
+
+  const handleNewChat = () => {
+    setCurrentMessages([]);
+    setChatData((prevData) => ({
+      ...prevData,
+      loading: "idle",
+      chatActive: false,
+      chatBotMessage: "",
+      currentConversationId: "",
+      messagesList: [],
+    }));
+  };
 
   const handleToggleHistoryMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -32,11 +51,14 @@ const Header: FC<HeaderProps> = ({ handleNewChat }) => {
   });
 
   return (
-    <header onClick={handleNewChat} className="w-full flex justify-center">
+    <header className="w-full flex justify-center">
       <div className="flex justify-between item-center sm:max-w-[734px] max-w-full sm:w-full w-full sm:bg-[#1A1A1A] bg-transparent rounded-[49px] p-0 sm:p-[20px]">
         <Logo />
 
-        <CustomButton iconBefore={<Add size="18" color="#FEFEFE" />}>
+        <CustomButton
+          onClick={handleNewChat}
+          iconBefore={<Add size="18" color="#FEFEFE" />}
+        >
           New Chat
         </CustomButton>
 
@@ -66,6 +88,4 @@ const Header: FC<HeaderProps> = ({ handleNewChat }) => {
 
 export default Header;
 
-type HeaderProps = {
-  handleNewChat: () => void;
-};
+type HeaderProps = {};

@@ -1,10 +1,11 @@
-import { FC, useRef, useState } from "react";
+import { FC, KeyboardEvent, useRef, useState } from "react";
 import CustomButton from "../atoms/CustomButton";
 import { Magicpen, Information } from "iconsax-react";
 import { generateImageFromText, translateText } from "../../api/apiService";
 import { ChatMessage } from "../../types";
 import { useAppContext } from "../../context/AppContext";
 import logo from "../../assets/logo-40x40.svg";
+import { chatLangOptions } from "../../mockData/chatMockData";
 
 const ImageGenerateBox: FC<ImageGenerateProps> = () => {
   const { chatData, setChatData } = useAppContext();
@@ -25,6 +26,18 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
   const handlePlaceholderClick = () => {
     if (inputRef.current) {
       inputRef.current.focus();
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Escape") {
+      inputRef.current?.blur();
+    }
+
+    if (event.key === "Enter") {
+      if (promptData.prompt?.length > 0) {
+        handleTranslate();
+      }
     }
   };
 
@@ -67,12 +80,16 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
 
   const handleTranslate = async () => {
     try {
+      const promptText = promptData.prompt;
+      updatePromptData("prompt", "");
+
       const newUserMsg: ChatMessage = {
         sender: "user",
-        content: promptData.prompt,
+        content: promptText,
         timestamp: new Date(),
       };
 
+      // curr messages??
       setChatData((prevData) => ({
         ...prevData,
         chatActive: true,
@@ -85,12 +102,10 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
         ...prevData,
         loading: "translating",
       }));
-      const result = await translateText(
-        promptData.prompt,
-        "en",
-        promptData.language
-      );
+      const result = await translateText(promptText, "en", promptData.language);
+
       if (result?.error) throw new Error("Failed to translate");
+
       if (result?.translated_text) {
         setChatData((prevData) => ({
           ...prevData,
@@ -126,9 +141,10 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
           }
           value={promptData.prompt}
           onChange={(e) => updatePromptData("prompt", e.target.value)}
+          onKeyDown={handleKeyDown}
           onFocus={() => setIsInputFocused(true)}
           onBlur={() => setIsInputFocused(false)}
-          className="w-full h-[62px] bg-transparent text-[#FEFEFE] leading-[1.25rem] text-[1rem] p-0 outline-none"
+          className="w-full h-[62px] bg-transparent text-light leading-[1.25rem] text-[1rem] p-0 outline-none"
         />
       </div>
 
@@ -136,7 +152,7 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
         <div className="flex items-center gap-1 sm:gap-3">
           <label
             htmlFor="dropdown"
-            className="text-[0.875rem] leading-[1.25rem] font-[400] text-[#888]"
+            className="text-[0.875rem] leading-[1.25rem] font-[400] text-gray"
           >
             Language:
           </label>
@@ -147,11 +163,11 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
               id="dropdown"
               value={promptData.language}
               onChange={(e) => updatePromptData("language", e.target.value)}
-              className="custom-select  h-[34px] bg-[#262626] py-2 pr-2 rounded-[5px] font-[400] text-[#FEFEFE] outline-none"
+              className="custom-select  h-[34px] bg-[#262626] py-2 pr-2 rounded-[5px] font-[400] text-light outline-none"
             >
-              {/* <option value="">Choose...</option> */}
-              <option value="fr">French</option>
-              <option value="yo">Yoruba</option>
+              {chatLangOptions?.map(({ value, label }, i) => (
+                <option value={value}>{label}</option>
+              ))}
             </select>
           </div>
         </div>
@@ -160,7 +176,8 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
           onClick={handleTranslate}
           disabled={
             chatData.loading === "generating" ||
-            chatData.loading === "translating"
+            chatData.loading === "translating" ||
+            promptData.prompt.length === 0
           }
         >
           {<Magicpen size="18" color="#FEFEFE" />}

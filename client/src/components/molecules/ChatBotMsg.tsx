@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import Typography from "../atoms/Typography";
 import logo from "../../assets/logo-40x40.svg";
 import loader from "../../assets/tinyLoader.gif";
 
@@ -23,18 +22,19 @@ const ChatBotMsg: FC<ChatBotMsgProps> = ({
       <div className="w-full flex items-start gap-[10.5px]">
         <img src={logo} alt="logo" />
         <div className="flex flex-col gap-[14.5px] mt-[10px]">
-          <Typography className="leading-5 font-[600] text-[1rem]">
+          <p className="leading-5 font-[600] text-[1rem] text-light">
             Textuary AI
-          </Typography>
-          <Typography
-            className="flex gap-3 leading-5 font-[400] text-[1rem]"
-            style={{ color: error ? "#FF4D4D" : "#FEFEFE" }}
+          </p>
+          <p
+            className={`flex gap-3 leading-5 font-[400] text-[1rem] ${
+              error ? "text-error" : "text-light"
+            }`}
           >
             {loading && (
               <img className="w-[18px] h-[18px]" src={loader} alt="loading" />
             )}
             {msg}
-          </Typography>
+          </p>
         </div>
       </div>
 

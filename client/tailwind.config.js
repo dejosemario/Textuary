@@ -3,6 +3,18 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      colors: {
+        white: "#FFFFFF",
+        light: "#FEFEFE",
+        black: "#000000",
+        dark: "#0A0A0A",
+        gray: "#888",
+        primary: "#007DFC",
+        success: "#00ff00",
+        error: "#FF4D4D",
+        // secondary: "#FF5733",
+        // accent: "#33FF57",
+      },
       screens: {
         xs: "320px", // Extra small screens, 320px and up
         sm: "480px", // Small screens, 480px and up
