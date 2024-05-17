@@ -3,9 +3,9 @@ import Typography from "../atoms/Typography";
 
 const UserChatMsg = ({ msg }: { msg: string }) => {
   return (
-    <div className="w-[524px] flex items-start gap-[10.5px]">
+    <div className="w-full md:w-[524px] flex items-start gap-[10.5px]">
       <CustomAvatar size={40} />
-      <div className="flex flex-col gap-1 mt-[10px]">
+      <div className="flex flex-col  gap-[14.5px] mt-[10px]">
         <Typography>You</Typography>
         <Typography>{msg}</Typography>
       </div>

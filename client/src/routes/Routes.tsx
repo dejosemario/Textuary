@@ -11,12 +11,12 @@ import SignUp from "../components/pages/SignUp";
 
 const AppRoutes: FC = () => {
   const isAuthenticated = () => {
-    return !!localStorage.getItem("authToken");
+    return !!localStorage.getItem("user");
   };
 
   const PrivateRoute: FC<{ element: JSX.Element }> = ({ element }) => {
-    // return isAuthenticated() ? element : <Navigate to="/login" />;
-    return isAuthenticated() ? element : element;
+    return isAuthenticated() ? element : <Navigate to="/login" />;
+    // return isAuthenticated() ? element : element;
   };
 
   return (

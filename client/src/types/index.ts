@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export type ChatMessage = {
   sender: "user" | "model";
   content: string;
@@ -26,3 +28,19 @@ export type ChatData = {
   messagesList: ChatMessage[];
   chatHistory: any;
 };
+
+export interface User {
+  username: string;
+}
+
+export interface UserState {
+  user: User | null;
+}
+
+export interface AppContextType {
+  userState: UserState;
+  login: (user: User) => void;
+  logout: () => void;
+  chatData: ChatData;
+  setChatData: Dispatch<SetStateAction<ChatData>>;
+}

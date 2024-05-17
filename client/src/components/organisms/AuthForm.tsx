@@ -1,13 +1,23 @@
+import { ChangeEvent, FC, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import CustomInput from "../atoms/CustomInput";
+import CustomButton from "../atoms/CustomButton";
+import { login, signup } from "../../api/apiService";
 import bgImg from "../../assets/logo-bg-536x536.png";
 import logo from "../../assets/logo-40x40.svg";
-import CustomInput from "../atoms/CustomInput";
-import { ChangeEvent, FC, useState } from "react";
-import CustomButton from "../atoms/CustomButton";
-import { Link, useNavigate } from "react-router-dom";
 
 const AuthForm: FC<AuthFormProps> = ({ type }) => {
   let navigate = useNavigate();
+  const [loadingState, setLoadingState] = useState<
+    "registering" | "logging" | ""
+  >("");
+
   const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState<any>({
     email: "",
     password: "",
   });
@@ -20,12 +30,67 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
     }));
   };
 
-  const handleAuth = (type: "login" | "sign-up") => {
-    if (type === "login") {
-      navigate("/");
+  const handleAuth = async (type: "login" | "sign-up") => {
+    const { email, password } = formValues;
+    let errors = {};
+
+    // Validation checks
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      errors = { ...errors, email: "Please enter a valid email address" };
     }
-    if (type === "sign-up") {
-      navigate("/");
+
+    if (!password || password.length < 6) {
+      errors = {
+        ...errors,
+        password: "Password must be at least 6 characters long",
+      };
+    }
+
+    if (Object.keys(errors).length === 0) {
+      if (type === "login") {
+        try {
+          setLoadingState("logging");
+          const response = await login(email, password);
+          // console.log("🚀 ~ handleAuth ~ response:", response);
+
+          if (response.success) {
+            setLoadingState("");
+            // Save user profile to local storage
+            localStorage.setItem("user", JSON.stringify(response.data));
+            navigate("/");
+          } else {
+            setLoadingState("");
+            // Handle authentication errors
+            console.error(response.message);
+          }
+        } catch (err) {
+          setLoadingState("");
+          console.error("err", err);
+        }
+      }
+
+      if (type === "sign-up") {
+        try {
+          setLoadingState("registering");
+          const response = await signup(email, password);
+          // console.log("🚀 ~ handleAuth ~ response:", response);
+
+          if (response.success) {
+            setLoadingState("");
+            // Save user profile to local storage
+            navigate("/login");
+          } else {
+            setLoadingState("");
+            // Handle authentication errors
+            console.error(response.message);
+          }
+        } catch (err) {
+          setLoadingState("");
+          console.error("err", err);
+        }
+      }
+    } else {
+      setErrors(errors);
     }
   };
 
@@ -57,8 +122,8 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
           <h4 className="text-2xl font-bold mb-[40px]">
             {type === "sign-up" ? "Sign Up" : " Login "}
           </h4>
-          <div className=" flex flex-col justify-start text-left  w-full">
-            <div className="mb-[16px]">
+          <div className="flex flex-col justify-start text-left  w-full">
+            <div className=" flex flex-col justify-start gap-[2px] mb-[16px]">
               <CustomInput
                 label="Email"
                 name="email"
@@ -67,8 +132,9 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
                 value={formValues.email}
                 onChange={handleChange}
               />
+              <span className="text-red-500">{errors.email}</span>
             </div>
-            <div className="mb-[28px]">
+            <div className=" flex flex-col justify-start gap-[2px]mb-[28px]">
               <CustomInput
                 label="Password"
                 name="password"
@@ -77,9 +143,13 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
                 value={formValues.password}
                 onChange={handleChange}
               />
+              <span className="text-red-500 mb-2">{errors.password}</span>
             </div>
             <CustomButton onClick={() => handleAuth(type)}>
-              {type === "sign-up" ? "Sign Up" : " Login "}
+              {type === "sign-up" && loadingState === "" && "Sign Up"}
+              {type === "login" && loadingState === "" && "Login"}
+              {loadingState === "registering" && "Signing Up..."}
+              {loadingState === "logging" && "Logging in..."}
             </CustomButton>
 
             <p className="text-left text-[#888888] mt-[12px]">

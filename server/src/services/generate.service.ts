@@ -25,7 +25,7 @@ const generateImageService = async (
     };
 
     const response = await axios.request(payload);
-    console.log("I am response", response);
+    // console.log("I am response", response);
     return response.data;
   } catch (error: any) {
     throw new Error(`Error generating image: ${error}`);

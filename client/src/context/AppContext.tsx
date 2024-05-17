@@ -1,54 +1,67 @@
-import { createContext, useState, ReactNode, useEffect, FC } from "react";
+import {
+  FC,
+  createContext,
+  useState,
+  ReactNode,
+  useEffect,
+  useContext,
+} from "react";
+import { AppContextType, ChatData, User, UserState } from "../types";
 
-interface User {
-  username: string;
-}
-
-interface AppState {
-  user: User | null;
-}
-
-interface AppContextProps {
-  state: AppState;
-  login: (user: User) => void;
-  logout: () => void;
-}
-
-const initialState: AppState = {
+const initialUserState: UserState = {
   user: null,
 };
 
-const AppContext = createContext<AppContextProps>({
-  state: initialState,
-  login: () => {},
-  logout: () => {},
-});
+const AppContext = createContext<AppContextType | undefined>(undefined);
+
+export function useAppContext() {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useAppContext must be used within a AppProvider");
+  }
+  return context;
+}
 
 const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [state, setState] = useState<AppState>(initialState);
+  const [userState, setUserState] = useState<UserState>(initialUserState);
+
+  const [chatData, setChatData] = useState<ChatData>({
+    loading: "idle",
+    chatActive: false,
+    chatBotMessage: null,
+    currentConversationId: "",
+    messagesList: [],
+    chatHistory: {},
+  });
 
   const login = (user: User) => {
-    setState({ user });
+    setUserState({ user });
     localStorage.setItem("user", JSON.stringify(user));
   };
 
   const logout = () => {
-    setState({ user: null });
+    setUserState({ user: null });
     localStorage.removeItem("user");
   };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    
+
     if (storedUser) {
-      setState({ user: JSON.parse(storedUser) });
+      setUserState({ user: JSON.parse(storedUser) });
     }
   }, []);
 
+  const contextValue: AppContextType = {
+    userState,
+    login,
+    logout,
+    chatData,
+    setChatData,
+  };
+
   return (
-    <AppContext.Provider value={{ state, login, logout }}>
-      {children}
-    </AppContext.Provider>
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
 };
 
