@@ -17,9 +17,14 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
     password: "",
   });
 
-  const [errors, setErrors] = useState<any>({
+  const [errors, setErrors] = useState<Errors>({
     email: "",
     password: "",
+  });
+
+  const [notification, setNotification] = useState<Notification>({
+    message: "",
+    type: "",
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +37,7 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
 
   const handleAuth = async (type: "login" | "sign-up") => {
     const { email, password } = formValues;
-    let errors = {};
+    let errors: Errors = {};
 
     // Validation checks
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
@@ -47,47 +52,70 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
     }
 
     if (Object.keys(errors).length === 0) {
-      if (type === "login") {
-        try {
+      try {
+        setErrors({
+          email: "",
+          password: "",
+        });
+        setNotification({
+          message: "",
+          type: "",
+        });
+
+        if (type === "login") {
           setLoadingState("logging");
           const response = await login(email, password);
           // console.log("🚀 ~ handleAuth ~ response:", response);
 
-          if (response.success) {
-            setLoadingState("");
-            // Save user profile to local storage
+          if (response?.error)
+            throw new Error(
+              response?.error?.message || "Error encountered logging in"
+            );
+
+          if (response?.success) {
             localStorage.setItem("user", JSON.stringify(response.data));
+            setNotification({
+              message: "Logged in successfully",
+              type: "error",
+            });
+
+            setLoadingState("");
             navigate("/");
           } else {
+            setNotification({ message: response.message, type: "error" });
             setLoadingState("");
-            // Handle authentication errors
-            console.error(response.message);
           }
-        } catch (err) {
-          setLoadingState("");
-          console.error("err", err);
-        }
-      }
-
-      if (type === "sign-up") {
-        try {
+        } else if (type === "sign-up") {
           setLoadingState("registering");
           const response = await signup(email, password);
           // console.log("🚀 ~ handleAuth ~ response:", response);
 
-          if (response.success) {
+          if (response?.error)
+            throw new Error(
+              response?.error?.message || "Error encountered signing up"
+            );
+
+          if (response?.success) {
+            setNotification({
+              message: "Account created successfully",
+              type: "success",
+            });
+
             setLoadingState("");
-            // Save user profile to local storage
             navigate("/login");
           } else {
+            setNotification({ message: response.message, type: "error" });
             setLoadingState("");
-            // Handle authentication errors
-            console.error(response.message);
           }
-        } catch (err) {
-          setLoadingState("");
-          console.error("err", err);
         }
+      } catch (err) {
+        setNotification({
+          message:
+            (err as any)?.message || "An error occurred. Please try again.",
+          type: "error",
+        });
+        setLoadingState("");
+        console.error(err);
       }
     } else {
       setErrors(errors);
@@ -96,7 +124,7 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
 
   return (
     <div
-      className="relative h-screen w-full  bg-[#0A0A0A] overflow-hidden px-[16px]"
+      className="relative h-screen w-full bg-dark overflow-hidden px-[16px]"
       style={{
         backgroundImage: `url(${bgImg})`,
         backgroundPosition: "500px top",
@@ -105,7 +133,7 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
       }}
     >
       <div className="filter-blur"></div>
-      <div className="sm:w-[559px] h-full mx-auto flex flex-col items-center justify-center text-[#fefefe] text-center gap-y-10 ">
+      <div className="sm:w-[559px] h-full mx-auto flex flex-col items-center justify-center text-light text-center gap-y-10 ">
         <div className="flex flex-col gap-y-5">
           <h2 className="sm:text-[2.25rem] text-[1.5rem] leading-[2.723125rem] font-bold ">
             Welcome to Textuary
@@ -122,6 +150,14 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
           <h4 className="text-2xl font-bold mb-[40px]">
             {type === "sign-up" ? "Sign Up" : " Login "}
           </h4>
+
+          {/* Notification */}
+          {notification.message && (
+            <div className={`mb-4 text-${notification.type}`}>
+              {notification.message}
+            </div>
+          )}
+
           <div className="flex flex-col justify-start text-left  w-full">
             <div className=" flex flex-col justify-start gap-[2px] mb-[16px]">
               <CustomInput
@@ -132,7 +168,7 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
                 value={formValues.email}
                 onChange={handleChange}
               />
-              <span className="text-red-500">{errors.email}</span>
+              <span className="text-error">{errors.email}</span>
             </div>
             <div className=" flex flex-col justify-start gap-[2px]mb-[28px]">
               <CustomInput
@@ -143,7 +179,7 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
                 value={formValues.password}
                 onChange={handleChange}
               />
-              <span className="text-red-500 mb-2">{errors.password}</span>
+              <span className="text-error mb-2">{errors.password}</span>
             </div>
             <CustomButton onClick={() => handleAuth(type)}>
               {type === "sign-up" && loadingState === "" && "Sign Up"}
@@ -152,18 +188,18 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
               {loadingState === "logging" && "Logging in..."}
             </CustomButton>
 
-            <p className="text-left text-[#888888] mt-[12px]">
+            <p className="text-left text-gray mt-[12px]">
               {type === "sign-up" ? (
                 <>
                   Already have an account?{" "}
-                  <Link to="/login" className="text-left text-[#fefefe]">
+                  <Link to="/login" className="text-left text-light">
                     Login
                   </Link>
                 </>
               ) : (
                 <>
                   Don't have an account?{" "}
-                  <Link to="/register" className="text-left text-[#fefefe]">
+                  <Link to="/register" className="text-left text-light">
                     Sign Up
                   </Link>
                 </>
@@ -180,4 +216,14 @@ export default AuthForm;
 
 interface AuthFormProps {
   type: "sign-up" | "login";
+}
+
+interface Errors {
+  email?: string;
+  password?: string;
+}
+
+interface Notification {
+  message: string;
+  type: "success" | "error" | "";
 }
