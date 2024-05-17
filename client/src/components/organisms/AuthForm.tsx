@@ -1,13 +1,19 @@
+import { ChangeEvent, FC, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import CustomInput from "../atoms/CustomInput";
+import CustomButton from "../atoms/CustomButton";
 import bgImg from "../../assets/logo-bg-536x536.png";
 import logo from "../../assets/logo-40x40.svg";
-import CustomInput from "../atoms/CustomInput";
-import { ChangeEvent, FC, useState } from "react";
-import CustomButton from "../atoms/CustomButton";
-import { Link, useNavigate } from "react-router-dom";
 
 const AuthForm: FC<AuthFormProps> = ({ type }) => {
   let navigate = useNavigate();
+
   const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState<any>({
     email: "",
     password: "",
   });
@@ -21,11 +27,30 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
   };
 
   const handleAuth = (type: "login" | "sign-up") => {
-    if (type === "login") {
-      navigate("/");
-    }
-    if (type === "sign-up") {
-      navigate("/");
+    const { email, password } = formValues;
+    let errors = {};
+
+    // Validation checks
+    // if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    //   errors = { ...errors, email: "Please enter a valid email address" };
+    // }
+
+    // if (!password || password.length < 6) {
+    //   errors = {
+    //     ...errors,
+    //     password: "Password must be at least 6 characters long",
+    //   };
+    // }
+
+    if (Object.keys(errors).length === 0) {
+      if (type === "login") {
+        navigate("/");
+      }
+      if (type === "sign-up") {
+        navigate("/");
+      }
+    } else {
+      setErrors(errors);
     }
   };
 
@@ -57,8 +82,8 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
           <h4 className="text-2xl font-bold mb-[40px]">
             {type === "sign-up" ? "Sign Up" : " Login "}
           </h4>
-          <div className=" flex flex-col justify-start text-left  w-full">
-            <div className="mb-[16px]">
+          <div className="flex flex-col justify-start text-left  w-full">
+            <div className=" flex flex-col justify-start gap-[2px] mb-[16px]">
               <CustomInput
                 label="Email"
                 name="email"
@@ -67,8 +92,9 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
                 value={formValues.email}
                 onChange={handleChange}
               />
+              <span className="text-red-500">{errors.email}</span>
             </div>
-            <div className="mb-[28px]">
+            <div className=" flex flex-col justify-start gap-[2px]mb-[28px]">
               <CustomInput
                 label="Password"
                 name="password"
@@ -77,6 +103,7 @@ const AuthForm: FC<AuthFormProps> = ({ type }) => {
                 value={formValues.password}
                 onChange={handleChange}
               />
+              <span className="text-red-500 mb-2">{errors.password}</span>
             </div>
             <CustomButton onClick={() => handleAuth(type)}>
               {type === "sign-up" ? "Sign Up" : " Login "}
