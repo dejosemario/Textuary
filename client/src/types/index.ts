@@ -40,12 +40,10 @@ export interface UserState {
 
 export interface AppContextType {
   chatData: ChatData;
-  currentMessages: ChatMessage[];
   isMenuOpen: boolean;
   isAvatarOpen: boolean;
   setChatData: StateSetter<ChatData>;
   handleHistoryClick: (history: ChatHistory) => void;
-  setCurrentMessages: StateSetter<ChatMessage[]>;
   setIsMenuOpen: StateSetter<boolean>;
   setIsAvatarOpen: StateSetter<boolean>;
 }
