@@ -12,6 +12,7 @@ import { useAppContext } from "../../context/AppContext";
 const Header: FC<HeaderProps> = () => {
   const historyPaneRef = useRef<HTMLDivElement>(null);
   const logoutMenuRef = useRef<HTMLDivElement>(null);
+  const { setCurrentMessages } = useAppContext();
 
   const {
     isMenuOpen,
@@ -22,6 +23,7 @@ const Header: FC<HeaderProps> = () => {
   } = useAppContext();
 
   const handleNewChat = () => {
+    setCurrentMessages([]);
     setChatData((prevData) => ({
       ...prevData,
       loading: "idle",

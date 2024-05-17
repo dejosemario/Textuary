@@ -40,3 +40,8 @@ export const mockChatHistory: ChatHistory[] = [
     updatedAt: new Date("2023-02-01T11:10:00Z"),
   },
 ];
+
+export const chatLangOptions = [
+  { value: "fr", label: "French" },
+  { value: "yo", label: "Yoruba" },
+];
