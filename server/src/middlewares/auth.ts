@@ -9,7 +9,7 @@ export const isAuthenticated = async (
 ): Promise<any> => {
   const authorizaton = req.headers.authorization;
   if (!authorizaton)
-    return res.status(401).json({ success: false, message: "Unauthorized" });
+    return res.status(401).json({ error: { message: "Unauthorized" } });
   const token = authorizaton.split(" ")[1];
 
   try {
@@ -19,10 +19,9 @@ export const isAuthenticated = async (
     next();
   } catch (error: any) {
     const message: string = error.message || "Invalid token";
-    return res.status(401).json({
-      success: false,
-      message: error.message || "Invalid token provided",
-    });
+    return res
+      .status(401)
+      .json({ error: { message: error.message || "Invalid token provided" } });
     // next(new ErrorWithStatus("Invalid token provided", 401));
   }
 };

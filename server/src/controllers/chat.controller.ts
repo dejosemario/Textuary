@@ -60,6 +60,6 @@ export const deleteChat = async (req: Request, res: Response): Promise<any> => {
       chat,
     });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: { message: error.message } });
   }
 };

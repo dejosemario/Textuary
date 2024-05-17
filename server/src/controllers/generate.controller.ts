@@ -12,10 +12,10 @@ export const generateImage = async (
   res: Response
 ): Promise<any> => {
   const { prompt } = req.body;
-  // console.log('Prompt', prompt);
   console.log("data", {
     apiKey,
     apiEndpoint,
+    prompt,
   });
 
   try {
@@ -25,7 +25,6 @@ export const generateImage = async (
     });
     res.json(ImageData);
   } catch (error: any) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ error: { message: error.message } });
   }
 };
-
