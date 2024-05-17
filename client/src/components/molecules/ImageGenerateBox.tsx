@@ -128,7 +128,7 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
           onChange={(e) => updatePromptData("prompt", e.target.value)}
           onFocus={() => setIsInputFocused(true)}
           onBlur={() => setIsInputFocused(false)}
-          className="w-full h-[62px] bg-transparent text-[#FEFEFE] leading-[1.25rem] text-[1rem] p-0 outline-none"
+          className="w-full h-[62px] bg-transparent text-light leading-[1.25rem] text-[1rem] p-0 outline-none"
         />
       </div>
 
@@ -136,7 +136,7 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
         <div className="flex items-center gap-1 sm:gap-3">
           <label
             htmlFor="dropdown"
-            className="text-[0.875rem] leading-[1.25rem] font-[400] text-[#888]"
+            className="text-[0.875rem] leading-[1.25rem] font-[400] text-gray"
           >
             Language:
           </label>
@@ -147,7 +147,7 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
               id="dropdown"
               value={promptData.language}
               onChange={(e) => updatePromptData("language", e.target.value)}
-              className="custom-select  h-[34px] bg-[#262626] py-2 pr-2 rounded-[5px] font-[400] text-[#FEFEFE] outline-none"
+              className="custom-select  h-[34px] bg-[#262626] py-2 pr-2 rounded-[5px] font-[400] text-light outline-none"
             >
               {/* <option value="">Choose...</option> */}
               <option value="fr">French</option>

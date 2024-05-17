@@ -21,7 +21,7 @@ export default function HomePage() {
 
   return (
     <div
-      className="justify-center w-screen h-screen bg-[#0A0A0A] min-h-screen flex"
+      className="justify-center w-screen h-screen bg-dark min-h-screen flex"
       style={{
         backgroundImage: `url(${bgImg})`,
         backgroundPosition: "center",
