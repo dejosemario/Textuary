@@ -80,12 +80,16 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
 
   const handleTranslate = async () => {
     try {
+      const promptText = promptData.prompt;
+      updatePromptData("prompt", "");
+
       const newUserMsg: ChatMessage = {
         sender: "user",
-        content: promptData.prompt,
+        content: promptText,
         timestamp: new Date(),
       };
 
+      // curr messages??
       setChatData((prevData) => ({
         ...prevData,
         chatActive: true,
@@ -98,12 +102,10 @@ const ImageGenerateBox: FC<ImageGenerateProps> = () => {
         ...prevData,
         loading: "translating",
       }));
-      const result = await translateText(
-        promptData.prompt,
-        "en",
-        promptData.language
-      );
+      const result = await translateText(promptText, "en", promptData.language);
+
       if (result?.error) throw new Error("Failed to translate");
+
       if (result?.translated_text) {
         setChatData((prevData) => ({
           ...prevData,
