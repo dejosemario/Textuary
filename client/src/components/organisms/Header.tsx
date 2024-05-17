@@ -4,7 +4,7 @@ import CustomButton from "../atoms/CustomButton/CustomButton";
 import { Add } from "iconsax-react";
 import Logo from "../atoms/Logo";
 import HistoryPane from "../molecules/HistoryPane";
-import { FC, useRef, useState } from "react";
+import { FC, useRef } from "react";
 import LogoutMenu from "../molecules/LogoutMenu";
 import useClickAway from "../../hooks/UseClickAway";
 import { useAppContext } from "../../context/AppContext";
@@ -12,7 +12,6 @@ import { useAppContext } from "../../context/AppContext";
 const Header: FC<HeaderProps> = () => {
   const historyPaneRef = useRef<HTMLDivElement>(null);
   const logoutMenuRef = useRef<HTMLDivElement>(null);
-  const { setCurrentMessages } = useAppContext();
 
   const {
     isMenuOpen,
@@ -23,7 +22,6 @@ const Header: FC<HeaderProps> = () => {
   } = useAppContext();
 
   const handleNewChat = () => {
-    setCurrentMessages([]);
     setChatData((prevData) => ({
       ...prevData,
       loading: "idle",

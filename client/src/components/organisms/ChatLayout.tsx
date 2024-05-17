@@ -1,17 +1,17 @@
 import { FC } from "react";
 import ChatBotMsg from "../molecules/ChatBotMsg";
 import UserChatMsg from "../molecules/UserChatMsg";
-import { ChatData } from "../../types";
 import { useAppContext } from "../../context/AppContext";
 
 const ChatLayout: FC<ChatLayoutProps> = () => {
-  const { currentMessages, chatData } = useAppContext();
+  const { chatData } = useAppContext();
+  const { messagesList } = chatData;
 
-  if (!currentMessages) return null;
+  if (!messagesList) return null;
 
   return (
     <div className="scrollable-container flex flex-col flex-1 gap-7 w-full mt-[50px] mb-4 overflow-y-auto">
-      {currentMessages?.map((msg, i) => {
+      {messagesList?.map((msg, i) => {
         if (msg.sender === "user") {
           return <UserChatMsg key={i} msg={msg.content} />;
         } else if (msg.sender === "model") {

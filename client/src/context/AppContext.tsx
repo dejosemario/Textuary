@@ -1,5 +1,5 @@
 import { FC, createContext, useState, ReactNode, useContext } from "react";
-import { AppContextType, ChatData, ChatHistory, ChatMessage } from "../types";
+import { AppContextType, ChatData, ChatHistory } from "../types";
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -24,29 +24,22 @@ const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
     chatHistory: {},
   });
 
-  const [currentMessages, setCurrentMessages] = useState<ChatMessage[]>(
-    chatData.messagesList
-  );
-
   const handleHistoryClick = (history: ChatHistory) => {
     setIsMenuOpen(false);
-
-    setCurrentMessages(history.messages);
 
     setChatData((prevData) => ({
       ...prevData,
       loading: "idle",
       chatActive: true,
+      messagesList: history.messages,
     }));
   };
 
   const contextValue: AppContextType = {
     chatData,
-    currentMessages,
     isMenuOpen,
     isAvatarOpen,
     setChatData,
-    setCurrentMessages,
     handleHistoryClick,
     setIsMenuOpen,
     setIsAvatarOpen,
