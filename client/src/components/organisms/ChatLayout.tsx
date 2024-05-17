@@ -10,7 +10,7 @@ const ChatLayout: FC<ChatLayoutProps> = () => {
   if (!currentMessages) return null;
 
   return (
-    <div className="flex flex-col flex-1 gap-7 w-full mt-[50px] mb-4 overflow-y-auto">
+    <div className="scrollable-container flex flex-col flex-1 gap-7 w-full mt-[50px] mb-4 overflow-y-auto">
       {currentMessages?.map((msg, i) => {
         if (msg.sender === "user") {
           return <UserChatMsg key={i} msg={msg.content} />;
