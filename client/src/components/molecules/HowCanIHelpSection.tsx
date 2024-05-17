@@ -4,7 +4,7 @@ const HowCanIHelpSection = () => {
   return (
     <div className="flex flex-col items-center text-center">
       <h1 className="mb-5 text-[#FEFEFE] font-[700] text-[1.5rem] leading-[29.05px] md:text-[36px] md:leading-[43.57px]">
-        How can i help you today?
+        How can I help you today?
       </h1>
 
       <p className="max-w-[559px] text-[#FEFEFE] mb-9 font-[400] text-[1rem] leading-[22px]">

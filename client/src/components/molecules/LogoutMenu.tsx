@@ -4,6 +4,9 @@ const LogoutMenu = () => {
   let navigate = useNavigate();
 
   const handleLogout = () => {
+    // Remove user profile data from local storage
+    localStorage.removeItem("user");
+    
     navigate("/login");
   };
 
