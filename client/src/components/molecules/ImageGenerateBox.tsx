@@ -1,23 +1,31 @@
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { FC, useRef, useState } from "react";
 import CustomButton from "../atoms/CustomButton";
-import { Magicpen } from "iconsax-react";
+import { Magicpen, Information } from "iconsax-react";
 import { generateImageFromText, translateText } from "../../api/apiService";
-import { ChatData, ChatMessage } from "../../types";
+import { ChatMessage } from "../../types";
+import { useAppContext } from "../../context/AppContext";
+import logo from "../../assets/logo-40x40.svg";
 
-const ImageGenerateBox: FC<ImageGenerateProps> = ({
-  chatData,
-  setChatData,
-}) => {
+const ImageGenerateBox: FC<ImageGenerateProps> = () => {
+  const { chatData, setChatData } = useAppContext();
   const [promptData, setPromptData] = useState<DataType>({
     language: "yo",
     prompt: "",
   });
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const updatePromptData = (fieldName: string, value: string) => {
     setPromptData((prevData) => ({
       ...prevData,
       [fieldName]: value,
     }));
+  };
+
+  const handlePlaceholderClick = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   const handleGenerate = async (prompt: string) => {
@@ -29,8 +37,7 @@ const ImageGenerateBox: FC<ImageGenerateProps> = ({
 
       const result = await generateImageFromText(prompt);
 
-      console.log("🚀 ~ handleGenerate ~ result:", result);
-
+      if (result?.error) throw new Error("Failed to generate");
       const currentDate = new Date();
 
       const newAiMsg: ChatMessage = {
@@ -83,8 +90,7 @@ const ImageGenerateBox: FC<ImageGenerateProps> = ({
         "en",
         promptData.language
       );
-      console.log("🚀 ~ handleTranslate ~ result:", result);
-
+      if (result?.error) throw new Error("Failed to translate");
       if (result?.translated_text) {
         setChatData((prevData) => ({
           ...prevData,
@@ -97,41 +103,66 @@ const ImageGenerateBox: FC<ImageGenerateProps> = ({
         ...prevData,
         loading: "error",
       }));
-      console.log("🚀 ~ handleTranslate ~ error:", error);
     }
   };
 
   return (
-    <div className="flex flex-col gap-5 max-w-full sm:max-w-[906px] w-[90%] md:w-full h-[132px] p-2 border border-[#262626] rounded-[10px] bg-[#1A1A1A]">
-      <input
-        type="text"
-        value={promptData.prompt}
-        onChange={(e) => updatePromptData("prompt", e.target.value)}
-        className="w-full h-[62px] bg-transparent text-[#FEFEFE] leading-[1.25rem] font-[1rem] outline-none"
-      />
+    <div className="flex flex-col justify-between w-full h-[132px] p-2 border border-[#262626] rounded-[10px] bg-[#1A1A1A]">
+      <div className="relative">
+        {!isInputFocused && !(promptData?.prompt?.length > 0) && (
+          <div
+            className="absolute flex items-center gap-3"
+            onClick={handlePlaceholderClick}
+          >
+            <img src={logo} alt="logo" />
+            <p className="text-[#888]">Ask me anything</p>
+          </div>
+        )}
+        <textarea
+          ref={inputRef}
+          disabled={
+            chatData.loading === "generating" ||
+            chatData.loading === "translating"
+          }
+          value={promptData.prompt}
+          onChange={(e) => updatePromptData("prompt", e.target.value)}
+          onFocus={() => setIsInputFocused(true)}
+          onBlur={() => setIsInputFocused(false)}
+          className="w-full h-[62px] bg-transparent text-[#FEFEFE] leading-[1.25rem] text-[1rem] p-0 outline-none"
+        />
+      </div>
 
-      <div className=" flex justify-between">
-        <div>
+      <div className="flex justify-between">
+        <div className="flex items-center gap-1 sm:gap-3">
           <label
             htmlFor="dropdown"
-            className="mr-3 text-[0.875rem] leading-[1.25rem] font-[400] text-[#888]"
+            className="text-[0.875rem] leading-[1.25rem] font-[400] text-[#888]"
           >
             Language:
           </label>
 
-          <select
-            id="dropdown"
-            value={promptData.language}
-            onChange={(e) => updatePromptData("language", e.target.value)}
-            className="w-[116px] bg-[#262626] px-2 py-3 rounded-[5px] text-[#FEFEFE]"
-          >
-            {/* <option value="">Choose...</option> */}
-            <option value="fr">French</option>
-            <option value="yo">Yoruba</option>
-          </select>
+          <div className="flex items-center gap-1 bg-[#262626] px-3 rounded-[5px]">
+            <Information color="#FEFEFE" />
+            <select
+              id="dropdown"
+              value={promptData.language}
+              onChange={(e) => updatePromptData("language", e.target.value)}
+              className="custom-select  h-[34px] bg-[#262626] py-2 pr-2 rounded-[5px] font-[400] text-[#FEFEFE] outline-none"
+            >
+              {/* <option value="">Choose...</option> */}
+              <option value="fr">French</option>
+              <option value="yo">Yoruba</option>
+            </select>
+          </div>
         </div>
 
-        <CustomButton onClick={handleTranslate}>
+        <CustomButton
+          onClick={handleTranslate}
+          disabled={
+            chatData.loading === "generating" ||
+            chatData.loading === "translating"
+          }
+        >
           {<Magicpen size="18" color="#FEFEFE" />}
         </CustomButton>
       </div>
@@ -141,18 +172,9 @@ const ImageGenerateBox: FC<ImageGenerateProps> = ({
 
 export default ImageGenerateBox;
 
-interface ImageGenerateProps {
-  chatData: ChatData;
-  setChatData: Dispatch<SetStateAction<ChatData>>;
-}
+interface ImageGenerateProps {}
 
 type DataType = {
   language: string;
   prompt: string;
-};
-
-type LoadingState = {
-  translation: "not_loaded" | "loading" | "loaded";
-  generation: "not_loaded" | "loading" | "loaded";
-  error: boolean;
 };

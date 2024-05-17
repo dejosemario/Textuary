@@ -2,7 +2,6 @@ import { FC } from "react";
 import ChatBotMsg from "../molecules/ChatBotMsg";
 import UserChatMsg from "../molecules/UserChatMsg";
 import { ChatData } from "../../types";
-import loader from "../../assets/tinyLoader.gif";
 
 const ChatLayout: FC<ChatLayoutProps> = ({ chatData }) => {
   const { messagesList } = chatData;
@@ -10,7 +9,7 @@ const ChatLayout: FC<ChatLayoutProps> = ({ chatData }) => {
   if (!messagesList) return null;
 
   return (
-    <div className="flex flex-col flex-1 gap-7 w-full my-4 overflow-y-auto">
+    <div className="flex flex-col flex-1 gap-7 w-full mt-[50px] mb-4 overflow-y-auto">
       {messagesList?.map((msg, i) => {
         if (msg.sender === "user") {
           return <UserChatMsg key={i} msg={msg.content} />;
@@ -19,18 +18,18 @@ const ChatLayout: FC<ChatLayoutProps> = ({ chatData }) => {
         }
         return null;
       })}
+
       {(chatData.loading === "generating" ||
         chatData.loading === "translating") && (
-        <div className="flex gap-1">
-          <img className="w-[18px] h-[18px]" src={loader} alt="loading" />
+        <>
           {chatData.loading === "translating" && (
-            <ChatBotMsg msg="Translating Prompt" />
+            <ChatBotMsg msg="Translating Prompt" loading={true} />
           )}
 
           {chatData.loading === "generating" && (
-            <ChatBotMsg msg="Generating Image" />
+            <ChatBotMsg msg="Generating Image" loading={true} />
           )}
-        </div>
+        </>
       )}
       {chatData.loading === "error" && (
         <ChatBotMsg error={true} msg="Error encountered" />

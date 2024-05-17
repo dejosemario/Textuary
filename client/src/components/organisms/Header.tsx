@@ -20,8 +20,8 @@ const Header: FC<HeaderProps> = ({ handleNewChat }) => {
   };
 
   return (
-    <header onClick={handleNewChat}>
-      <div className="flex justify-between item-center sm:max-w-[734px] max-w-[100%] md:w-[734px] w-screen md:bg-[#1A1A1A] bg-transparent rounded-[49px] p-4 md:p-[20px]">
+    <header onClick={handleNewChat} className="w-full flex justify-center">
+      <div className="flex justify-between item-center sm:max-w-[734px] max-w-full sm:w-full w-full sm:bg-[#1A1A1A] bg-transparent rounded-[49px] p-0 sm:p-[20px]">
         <Logo />
 
         <CustomButton iconBefore={<Add size="18" color="#FEFEFE" />}>
